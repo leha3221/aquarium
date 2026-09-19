@@ -1,0 +1,15 @@
+ru\mirea\aquarium\repository\ServiceRequestRepository.class
+ru\mirea\aquarium\service\ServiceRequestService.class
+ru\mirea\aquarium\Main.class
+ru\mirea\aquarium\model\ServiceRequest.class
+ru\mirea\aquarium\service\ServiceRequestService$1.class
+ru\mirea\aquarium\model\AquariumType.class
+ru\mirea\aquarium\model\RequestStatus.class
+ru\mirea\aquarium\model\Client.class
+ru\mirea\aquarium\repository\ClientRepository.class
+ru\mirea\aquarium\util\DatabaseManager.class
+ru\mirea\aquarium\exception\EntityNotFoundException.class
+ru\mirea\aquarium\ui\ConsoleUI.class
+ru\mirea\aquarium\exception\BusinessException.class
+ru\mirea\aquarium\service\ClientService.class
+ru\mirea\aquarium\model\ServiceType.class
