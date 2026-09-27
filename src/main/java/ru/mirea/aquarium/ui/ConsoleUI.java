@@ -2,6 +2,9 @@ package ru.mirea.aquarium.ui;
 
 import ru.mirea.aquarium.exception.BusinessException;
 import ru.mirea.aquarium.exception.EntityNotFoundException;
+import ru.mirea.aquarium.export.CsvExporter;
+import ru.mirea.aquarium.export.ExcelExporter;
+import ru.mirea.aquarium.export.Exporter;
 import ru.mirea.aquarium.model.*;
 import ru.mirea.aquarium.service.ClientService;
 import ru.mirea.aquarium.service.ServiceRequestService;
@@ -35,6 +38,7 @@ public class ConsoleUI {
                 System.out.println("4. Фильтрация заявок");
                 System.out.println("5. Сортировка заявок");
                 System.out.println("6. Статистика");
+                System.out.println("7. Экспорт заявок");
                 System.out.println("0. Выход");
 
                 int choice = readInt("Выберите действие: ");
@@ -45,6 +49,7 @@ public class ConsoleUI {
                     case 4 -> filterMenu();
                     case 5 -> sortMenu();
                     case 6 -> statistics();
+                    case 7 -> exportMenu();
                     case 0 -> { System.out.println("Работа завершена."); return; }
                     default -> System.out.println("Нет такого пункта.");
                 }
@@ -161,6 +166,29 @@ public class ConsoleUI {
         System.out.println("Отменённых: " + requestService.countStatus(RequestStatus.CANCELLED));
         System.out.println("Высокого приоритета (4-5): " + requestService.countHighPriority());
         System.out.println("Доход по завершённым: " + requestService.totalRevenueCompleted());
+    }
+
+    private void exportMenu() {
+        System.out.println("\n--- ЭКСПОРТ ЗАЯВОК ---");
+        System.out.println("1. Excel (.xlsx)");
+        System.out.println("2. CSV (.csv)");
+        int c = readInt("Действие: ");
+
+        // Полиморфизм: переменная объявлена типом интерфейса Exporter,
+        // а конкретная реализация подставляется в зависимости от выбора.
+        Exporter exporter = switch (c) {
+            case 1 -> new ExcelExporter();
+            case 2 -> new CsvExporter();
+            default -> null;
+        };
+        if (exporter == null) return;
+
+        String fileName = readLine("Имя файла (без расширения): ");
+        String filePath = fileName + "." + exporter.fileExtension();
+
+        List<ServiceRequest> all = requestService.findAll();
+        exporter.export(all, filePath);
+        System.out.println("Экспортировано " + all.size() + " заявок в файл: " + filePath);
     }
 
     private Client readClient(long id) {
