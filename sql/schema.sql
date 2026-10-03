@@ -1,10 +1,12 @@
-﻿-- РЎРєСЂРёРїС‚ СЂР°СЃСЃС‡РёС‚Р°РЅ РЅР° Р·Р°РїСѓСЃРє С‡РµСЂРµР· psql.
+-- РЎРєСЂРёРїС‚ СЂР°СЃСЃС‡РёС‚Р°РЅ РЅР° Р·Р°РїСѓСЃРє С‡РµСЂРµР· psql.
 -- РЎРѕР·РґР°РЅРёРµ Р‘Р” РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё:
 SELECT 'CREATE DATABASE aquarium_service'
 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aquarium_service')\gexec
 
 \connect aquarium_service
 
+DROP TABLE IF EXISTS fish;
+DROP TABLE IF EXISTS aquariums;
 DROP TABLE IF EXISTS service_requests;
 DROP TABLE IF EXISTS clients;
 
@@ -58,3 +60,25 @@ VALUES
 (3,'PLANT','CLEANING','РЈРґР°Р»РµРЅРёРµ РІРѕРґРѕСЂРѕСЃР»РµР№','CONFIRMED',1,'2026-09-08 09:00:00','2026-09-23 12:00:00',2500.00),
 (4,'FRESHWATER','WATER_CHANGE','РџР»Р°РЅРѕРІР°СЏ РїРѕРґРјРµРЅР° РІРѕРґС‹','NEW',3,'2026-09-09 14:00:00','2026-09-24 11:00:00',2200.00),
 (5,'MARINE','AQUASCAPING','РќР°СЃС‚СЂРѕР№РєР° РјРѕСЂСЃРєРѕРіРѕ СЂРёС„Р°','IN_PROGRESS',5,'2026-09-10 16:00:00','2026-09-19 17:00:00',7500.00);
+
+CREATE TABLE IF NOT EXISTS aquariums (
+    id BIGSERIAL PRIMARY KEY,
+    client_id BIGINT NOT NULL REFERENCES clients(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    name VARCHAR(120) NOT NULL CHECK (length(trim(name)) > 0),
+    aquarium_type VARCHAR(30) NOT NULL CHECK (aquarium_type IN ('FRESHWATER','MARINE','REPTILE','PLANT')),
+    volume_liters NUMERIC(10,2) NOT NULL CHECK (volume_liters > 0)
+);
+CREATE INDEX IF NOT EXISTS idx_aquariums_client ON aquariums(client_id);
+CREATE TABLE IF NOT EXISTS fish (
+    id BIGSERIAL PRIMARY KEY,
+    aquarium_id BIGINT NOT NULL REFERENCES aquariums(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    species VARCHAR(120) NOT NULL CHECK (length(trim(species)) > 0),
+    quantity INT NOT NULL CHECK (quantity > 0)
+);
+CREATE INDEX IF NOT EXISTS idx_fish_aquarium ON fish(aquarium_id);
+INSERT INTO aquariums(client_id, name, aquarium_type, volume_liters) VALUES
+(1, 'Домашний аквариум', 'FRESHWATER', 200),
+(2, 'Морской риф', 'MARINE', 300),
+(4, 'Растительный аквариум', 'PLANT', 120);
+INSERT INTO fish(aquarium_id, species, quantity) VALUES
+(1, 'Гуппи', 10), (1, 'Неон', 15), (2, 'Рыба-клоун', 2), (3, 'Расбора', 12);

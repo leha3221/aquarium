@@ -3,6 +3,21 @@
 ```mermaid
 erDiagram
     CLIENTS ||--o{ SERVICE_REQUESTS : "создаёт"
+    CLIENTS ||--o{ AQUARIUMS : "владеет"
+    AQUARIUMS ||--o{ FISH : "содержит"
+    AQUARIUMS {
+        BIGINT id PK
+        BIGINT client_id FK
+        VARCHAR name
+        VARCHAR aquarium_type
+        DECIMAL volume_liters
+    }
+    FISH {
+        BIGINT id PK
+        BIGINT aquarium_id FK
+        VARCHAR species
+        INT quantity
+    }
 
     CLIENTS {
         BIGINT id PK

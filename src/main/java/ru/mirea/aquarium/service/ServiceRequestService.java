@@ -80,6 +80,15 @@ public class ServiceRequestService {
         return findAll().stream().sorted(cmp).toList();
     }
 
+    public List<ServiceRequest> sortByClientName(boolean ascending) {
+        java.text.Collator collator = java.text.Collator.getInstance(java.util.Locale.forLanguageTag("ru"));
+        collator.setStrength(java.text.Collator.SECONDARY);
+        Comparator<String> names = (left, right) -> collator.compare(left, right);
+        if (!ascending) names = names.reversed();
+        Comparator<ServiceRequest> cmp = Comparator.comparing(
+                ServiceRequest::getClientName, Comparator.nullsLast(names));
+        return findAll().stream().sorted(cmp.thenComparingLong(ServiceRequest::getId)).toList();
+    }
     public long countStatus(RequestStatus status) {
         return findAll().stream().filter(r -> r.getStatus() == status).count();
     }

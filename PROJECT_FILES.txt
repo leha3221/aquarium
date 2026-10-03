@@ -21,3 +21,11 @@ src/main/java/ru/mirea/aquarium/export/CsvExporter.java
 src/main/java/ru/mirea/aquarium/ui/ConsoleUI.java
 docs/DEFENSE_CHEATSHEET.md
 docs/REPORT_TEXT.md
+sql/migration_aquariums_fish.sql
+src/main/java/ru/mirea/aquarium/model/Aquarium.java
+src/main/java/ru/mirea/aquarium/repository/AquariumRepository.java
+src/main/java/ru/mirea/aquarium/service/AquariumService.java
+src/main/java/ru/mirea/aquarium/model/Fish.java
+src/main/java/ru/mirea/aquarium/repository/FishRepository.java
+src/main/java/ru/mirea/aquarium/service/FishService.java
+src/test/java/ru/mirea/aquarium/EntityServiceTest.java

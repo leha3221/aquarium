@@ -1,5 +1,9 @@
 package ru.mirea.aquarium;
 
+import ru.mirea.aquarium.repository.AquariumRepository;
+import ru.mirea.aquarium.repository.FishRepository;
+import ru.mirea.aquarium.service.AquariumService;
+import ru.mirea.aquarium.service.FishService;
 import ru.mirea.aquarium.repository.ClientRepository;
 import ru.mirea.aquarium.repository.ServiceRequestRepository;
 import ru.mirea.aquarium.service.ClientService;
@@ -19,7 +23,10 @@ public class Main {
             ServiceRequestService requestService =
                     new ServiceRequestService(requestRepository, clientRepository);
 
-            new ConsoleUI(clientService, requestService).run();
+            AquariumRepository aquariumRepository = new AquariumRepository();
+            AquariumService aquariumService = new AquariumService(aquariumRepository, clientRepository);
+            FishService fishService = new FishService(new FishRepository(), aquariumRepository);
+            new ConsoleUI(clientService, requestService, aquariumService, fishService).run();
         } catch (Exception e) {
             System.err.println("Критическая ошибка запуска: " + e.getMessage());
             System.err.println("Проверьте PostgreSQL, БД и настройки DatabaseManager.");

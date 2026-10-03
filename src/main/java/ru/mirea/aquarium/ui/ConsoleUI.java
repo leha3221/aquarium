@@ -6,6 +6,8 @@ import ru.mirea.aquarium.export.CsvExporter;
 import ru.mirea.aquarium.export.ExcelExporter;
 import ru.mirea.aquarium.export.Exporter;
 import ru.mirea.aquarium.model.*;
+import ru.mirea.aquarium.service.AquariumService;
+import ru.mirea.aquarium.service.FishService;
 import ru.mirea.aquarium.service.ClientService;
 import ru.mirea.aquarium.service.ServiceRequestService;
 
@@ -18,12 +20,16 @@ import java.util.Scanner;
 public class ConsoleUI {
     private final ClientService clientService;
     private final ServiceRequestService requestService;
+    private final AquariumService aquariumService;
+    private final FishService fishService;
     private final Scanner scanner = new Scanner(System.in);
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public ConsoleUI(ClientService clientService, ServiceRequestService requestService) {
+    public ConsoleUI(ClientService clientService, ServiceRequestService requestService, AquariumService aquariumService, FishService fishService) {
         this.clientService = clientService;
         this.requestService = requestService;
+        this.aquariumService = aquariumService;
+        this.fishService = fishService;
     }
 
     public void run() {
@@ -39,6 +45,8 @@ public class ConsoleUI {
                 System.out.println("5. Сортировка заявок");
                 System.out.println("6. Статистика");
                 System.out.println("7. Экспорт заявок");
+                System.out.println("8. Аквариумы");
+                System.out.println("9. Рыбы");
                 System.out.println("0. Выход");
 
                 int choice = readInt("Выберите действие: ");
@@ -50,6 +58,8 @@ public class ConsoleUI {
                     case 5 -> sortMenu();
                     case 6 -> statistics();
                     case 7 -> exportMenu();
+                    case 8 -> aquariumsMenu();
+                    case 9 -> fishMenu();
                     case 0 -> { System.out.println("Работа завершена."); return; }
                     default -> System.out.println("Нет такого пункта.");
                 }
@@ -146,19 +156,36 @@ public class ConsoleUI {
     private void sortMenu() {
         System.out.println("\n1. По плановой дате");
         System.out.println("2. По стоимости");
+        System.out.println("3. По имени клиента (А–Я / Я–А)");
         int c = readInt("Действие: ");
-        boolean asc = readInt("1 - по возрастанию, 2 - по убыванию: ") == 1;
-        List<ServiceRequest> result = c == 1
-                ? requestService.sortByDate(asc)
-                : requestService.sortByPrice(asc);
+        if (c < 1 || c > 3) {
+            System.out.println("Нет такого пункта.");
+            return;
+        }
+        int direction;
+        do {
+            direction = readInt(c == 3
+                    ? "1 - от А до Я, 2 - от Я до А: "
+                    : "1 - по возрастанию, 2 - по убыванию: ");
+            if (direction != 1 && direction != 2) System.out.println("Выберите 1 или 2.");
+        } while (direction != 1 && direction != 2);
+        boolean asc = direction == 1;
+        List<ServiceRequest> result = switch (c) {
+            case 1 -> requestService.sortByDate(asc);
+            case 2 -> requestService.sortByPrice(asc);
+            case 3 -> requestService.sortByClientName(asc);
+            default -> throw new IllegalStateException("Неизвестная сортировка");
+        };
         result.forEach(System.out::println);
     }
-
     private void statistics() {
         List<ServiceRequest> all = requestService.findAll();
         System.out.println("\n--- СТАТИСТИКА ---");
         System.out.println("Всего клиентов: " + clientService.findAll().size());
         System.out.println("Всего заявок: " + all.size());
+        System.out.println("Всего аквариумов: " + aquariumService.findAll().size());
+        System.out.println("Записей о рыбах: " + fishService.findAll().size());
+        System.out.println("Всего рыб: " + fishService.findAll().stream().mapToLong(Fish::getQuantity).sum());
         System.out.println("Новых: " + requestService.countStatus(RequestStatus.NEW));
         System.out.println("Подтверждённых: " + requestService.countStatus(RequestStatus.CONFIRMED));
         System.out.println("В работе: " + requestService.countStatus(RequestStatus.IN_PROGRESS));
@@ -189,6 +216,68 @@ public class ConsoleUI {
         List<ServiceRequest> all = requestService.findAll();
         exporter.export(all, filePath);
         System.out.println("Экспортировано " + all.size() + " заявок в файл: " + filePath);
+    }
+
+    private void aquariumsMenu() {
+        while (true) {
+            System.out.println("\n--- АКВАРИУМЫ ---");
+            System.out.println("1. Создать\n2. Показать все\n3. Получить по ID\n4. Изменить\n5. Удалить (вместе с рыбами)");
+            System.out.println("6. Поиск по названию\n7. По клиенту\n8. По типу\n9. Сортировка по объёму\n0. Назад");
+            try {
+                switch (readInt("Действие: ")) {
+                    case 1 -> System.out.println(aquariumService.create(readAquarium(0)));
+                    case 2 -> aquariumService.findAll().forEach(System.out::println);
+                    case 3 -> System.out.println(aquariumService.get(readLong("ID: ")));
+                    case 4 -> aquariumService.update(readAquarium(readLong("ID: ")));
+                    case 5 -> aquariumService.delete(readLong("ID: "));
+                    case 6 -> aquariumService.searchByName(readLine("Название: ")).forEach(System.out::println);
+                    case 7 -> aquariumService.findByClient(readLong("ID клиента: ")).forEach(System.out::println);
+                    case 8 -> aquariumService.filterByType(readEnum(AquariumType.values(), "Тип")).forEach(System.out::println);
+                    case 9 -> aquariumService.sortByVolume(readInt("1 — возрастание, 2 — убывание: ") == 1).forEach(System.out::println);
+                    case 0 -> { return; }
+                    default -> System.out.println("Нет такого пункта.");
+                }
+            } catch (RuntimeException e) { System.out.println("Ошибка: " + e.getMessage()); }
+        }
+    }
+    private void fishMenu() {
+        while (true) {
+            System.out.println("\n--- РЫБЫ ---");
+            System.out.println("1. Создать\n2. Показать всех\n3. Получить по ID\n4. Изменить\n5. Удалить");
+            System.out.println("6. Поиск по виду\n7. По аквариуму\n8. Сортировка по количеству\n9. Сортировка по алфавиту (вид рыбы)\n0. Назад");
+            try {
+                switch (readInt("Действие: ")) {
+                    case 1 -> System.out.println(fishService.create(readFish(0)));
+                    case 2 -> fishService.findAll().forEach(System.out::println);
+                    case 3 -> System.out.println(fishService.get(readLong("ID: ")));
+                    case 4 -> fishService.update(readFish(readLong("ID: ")));
+                    case 5 -> fishService.delete(readLong("ID: "));
+                    case 6 -> fishService.searchBySpecies(readLine("Вид: ")).forEach(System.out::println);
+                    case 7 -> fishService.findByAquarium(readLong("ID аквариума: ")).forEach(System.out::println);
+                    case 8 -> fishService.sortByQuantity(readInt("1 — возрастание, 2 — убывание: ") == 1).forEach(System.out::println);
+                    case 9 -> fishService.sortBySpecies(readInt("1 — А–Я, 2 — Я–А: ") == 1).forEach(System.out::println);
+                    case 0 -> { return; }
+                    default -> System.out.println("Нет такого пункта.");
+                }
+            } catch (RuntimeException e) { System.out.println("Ошибка: " + e.getMessage()); }
+        }
+    }
+    private Aquarium readAquarium(long id) {
+        if (id != 0) aquariumService.get(id);
+        long clientId = readLong("ID клиента: ");
+        String name = readLine("Название аквариума: ");
+        AquariumType type = readEnum(AquariumType.values(), "Тип аквариума");
+        return new Aquarium(id, clientId, name, type, readDecimal("Объём в литрах: "));
+    }
+    private Fish readFish(long id) {
+        if (id != 0) fishService.get(id);
+        return new Fish(id, readLong("ID аквариума: "), readLine("Вид рыбы: "), readInt("Количество: "));
+    }
+    private BigDecimal readDecimal(String prompt) {
+        while (true) {
+            try { return new BigDecimal(readLine(prompt).replace(',', '.')); }
+            catch (NumberFormatException e) { System.out.println("Введите число, например 120.5."); }
+        }
     }
 
     private Client readClient(long id) {
