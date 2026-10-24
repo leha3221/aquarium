@@ -22,11 +22,13 @@ Get-Content -Raw -Encoding utf8 sql/fix_seed_encoding.sql | docker exec -i aquar
 
 Скрипт затрагивает только демонстрационные записи с ID клиентов 1–5 и заявок 1–10, в которых обнаружен повреждённый текст.
 
-Клиент автоматически читает `POSTGRES_USER`, `POSTGRES_PASSWORD` и `POSTGRES_PORT` из `.env`. При необходимости параметры можно переопределить переменными `AQUARIUM_DB_USER`, `AQUARIUM_DB_PASSWORD`, `AQUARIUM_DB_URL`. Запустите клиент:
+Клиент автоматически читает `POSTGRES_USER`, `POSTGRES_PASSWORD` и `POSTGRES_PORT` из `.env`. При необходимости параметры можно переопределить переменными `AQUARIUM_DB_USER`, `AQUARIUM_DB_PASSWORD`, `AQUARIUM_DB_URL`. Запустите клиент в PowerShell из корня проекта:
 
 ```powershell
-mvn javafx:run
+powershell -ExecutionPolicy Bypass -File .\run-javafx.ps1
 ```
+
+Скрипт сам создаёт локальный Maven settings-файл в `target`, поэтому он продолжает работать после `mvn clean` и не требует ручного создания настроек.
 
 JavaFX-клиент остаётся настольным приложением и запускается на компьютере. Docker здесь запускает PostgreSQL, к которому клиент обращается через опубликованный порт `5433`.
 

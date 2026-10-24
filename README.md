@@ -39,10 +39,10 @@ Copy-Item .env.example .env
 docker compose up -d --wait
 ```
 
-JavaFX автоматически читает учётные данные и порт из локального `.env`. Запустите приложение:
+JavaFX автоматически читает учётные данные и порт из локального `.env`. В PowerShell запустите:
 
 ```powershell
-mvn javafx:run
+powershell -ExecutionPolicy Bypass -File .\run-javafx.ps1
 ```
 
 `mvn exec:java` запускает консольное приложение КР №1. Полные инструкции и возможности JavaFX описаны в [docs/JAVAFX_RUN.md](docs/JAVAFX_RUN.md).
