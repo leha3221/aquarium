@@ -1,0 +1,8 @@
+.root { -fx-font-family: "Arial", sans-serif; -fx-background-color: #f3f7fb; }
+.header { -fx-padding: 22 24 16 24; -fx-background-color: white; }
+.title { -fx-font-size: 23px; -fx-font-weight: bold; -fx-text-fill: #15324b; }
+.toolbar { -fx-padding: 14 20 18 20; -fx-background-color: white; }
+.button { -fx-background-radius: 7; -fx-padding: 9 14; -fx-cursor: hand; }
+.primary { -fx-background-color: #167d9a; -fx-text-fill: white; }
+.table-view { -fx-background-color: white; -fx-border-color: #d8e2eb; }
+.column-header-background { -fx-background-color: #eaf1f6; }

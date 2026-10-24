@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mirea.aquarium.fx.RequestController" styleClass="root">
+  <top><VBox spacing="12" styleClass="header">
+    <Label text="Заявки на обслуживание аквариумов" styleClass="title" />
+    <HBox spacing="8" alignment="CENTER_LEFT">
+      <TextField fx:id="search" promptText="Поиск: клиент, описание, услуга, ID" HBox.hgrow="ALWAYS" />
+      <ComboBox fx:id="statusFilter" promptText="Статус" />
+      <ComboBox fx:id="typeFilter" promptText="Тип аквариума" />
+      <ComboBox fx:id="clientFilter" promptText="Клиент" />
+      <Label text="Приоритет от"/><Spinner fx:id="priorityFilter" prefWidth="75" />
+    </HBox>
+  </VBox></top>
+  <center><TableView fx:id="table" /></center>
+  <bottom><HBox spacing="10" styleClass="toolbar">
+    <Button text="Добавить" onAction="#add" styleClass="primary" />
+    <Button text="Изменить выбранную" onAction="#editSelected" />
+    <Button text="Удалить выбранную" onAction="#deleteSelected" />
+    <Button text="Обновить" onAction="#refresh" />
+    <Pane HBox.hgrow="ALWAYS" />
+    <Button text="Статистика" onAction="#showStatistics" />
+    <Button text="Клиенты и аквариумы" onAction="#openManagement" />
+    <Button text="Экспорт CSV" onAction="#export" />
+  </HBox></bottom>
+</BorderPane>

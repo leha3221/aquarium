@@ -31,22 +31,24 @@
 - многослойная архитектура `Console UI -> Service -> Repository -> Database`.
 
 ## Запуск
-1. Установить JDK 17+ и PostgreSQL 14+.
-2. Создать БД:
-   ```sql
-   psql -U postgres -f sql/schema.sql
-   ```
-3. При необходимости изменить логин/пароль в `src/main/java/ru/mirea/aquarium/util/DatabaseManager.java`.
-4. Выполнить:
-   ```bash
-   mvn clean compile
-   mvn exec:java
-   ```
+Для JavaFX-клиента установите JDK 17+, Maven и Docker Desktop с Docker Compose. Создайте локальный `.env` и запустите PostgreSQL:
 
-По умолчанию:
-- URL: `jdbc:postgresql://localhost:5432/aquarium_service`
-- user: `postgres`
-- password: ваш пароль PostgreSQL
+```powershell
+Copy-Item .env.example .env
+# Измените POSTGRES_PASSWORD в .env
+docker compose up -d --wait
+```
+
+Перед запуском JavaFX задайте пароль из `.env` в `AQUARIUM_DB_PASSWORD`, затем запустите:
+
+```powershell
+$env:AQUARIUM_DB_URL = 'jdbc:postgresql://localhost:5433/aquarium_service'
+$env:AQUARIUM_DB_USER = 'postgres'
+$env:AQUARIUM_DB_PASSWORD = '<пароль из .env>'
+mvn javafx:run
+```
+
+`mvn exec:java` запускает консольное приложение КР №1. Полные инструкции и возможности JavaFX описаны в [docs/JAVAFX_RUN.md](docs/JAVAFX_RUN.md).
 
 ## Защита
 Главная идея архитектуры:
