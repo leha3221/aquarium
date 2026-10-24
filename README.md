@@ -39,12 +39,9 @@ Copy-Item .env.example .env
 docker compose up -d --wait
 ```
 
-Перед запуском JavaFX задайте пароль из `.env` в `AQUARIUM_DB_PASSWORD`, затем запустите:
+JavaFX автоматически читает учётные данные и порт из локального `.env`. Запустите приложение:
 
 ```powershell
-$env:AQUARIUM_DB_URL = 'jdbc:postgresql://localhost:5433/aquarium_service'
-$env:AQUARIUM_DB_USER = 'postgres'
-$env:AQUARIUM_DB_PASSWORD = '<пароль из .env>'
 mvn javafx:run
 ```
 

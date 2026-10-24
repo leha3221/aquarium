@@ -22,12 +22,9 @@ Get-Content -Raw -Encoding utf8 sql/fix_seed_encoding.sql | docker exec -i aquar
 
 Скрипт затрагивает только демонстрационные записи с ID клиентов 1–5 и заявок 1–10, в которых обнаружен повреждённый текст.
 
-Затем задайте параметры JDBC-подключения и запустите клиент:
+Клиент автоматически читает `POSTGRES_USER`, `POSTGRES_PASSWORD` и `POSTGRES_PORT` из `.env`. При необходимости параметры можно переопределить переменными `AQUARIUM_DB_USER`, `AQUARIUM_DB_PASSWORD`, `AQUARIUM_DB_URL`. Запустите клиент:
 
 ```powershell
-$env:AQUARIUM_DB_URL = 'jdbc:postgresql://localhost:5433/aquarium_service'
-$env:AQUARIUM_DB_USER = 'postgres'
-$env:AQUARIUM_DB_PASSWORD = '<значение POSTGRES_PASSWORD из .env>'
 mvn javafx:run
 ```
 
