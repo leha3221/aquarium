@@ -2,12 +2,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mirea.aquarium.fx.ManagementController" styleClass="root">
+  <top><VBox spacing="4" styleClass="header compact-header"><Label text="Справочники системы" styleClass="title"/><Label text="Сначала создайте клиента, затем его аквариум и записи о рыбах" styleClass="subtitle"/></VBox></top>
   <center>
     <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE">
       <tabs>
-        <Tab text="Клиенты"><BorderPane><center><TableView fx:id="clientsTable" /></center><bottom><HBox spacing="8" styleClass="toolbar"><Button text="Добавить клиента" onAction="#add" styleClass="primary"/><Button text="Изменить" onAction="#edit"/><Button text="Удалить" onAction="#delete"/><Button text="Обновить" onAction="#refresh"/></HBox></bottom></BorderPane></Tab>
-        <Tab text="Аквариумы"><BorderPane><center><TableView fx:id="aquariumsTable" /></center><bottom><HBox spacing="8" styleClass="toolbar"><Button text="Добавить аквариум" onAction="#add" styleClass="primary"/><Button text="Изменить" onAction="#edit"/><Button text="Удалить" onAction="#delete"/><Button text="Обновить" onAction="#refresh"/></HBox></bottom></BorderPane></Tab>
-        <Tab text="Рыбы"><BorderPane><center><TableView fx:id="fishTable" /></center><bottom><HBox spacing="8" styleClass="toolbar"><Button text="Добавить рыб" onAction="#add" styleClass="primary"/><Button text="Изменить" onAction="#edit"/><Button text="Удалить" onAction="#delete"/><Button text="Обновить" onAction="#refresh"/></HBox></bottom></BorderPane></Tab>
+        <Tab text="Клиенты"><BorderPane><center><TableView fx:id="clientsTable" /></center><bottom><HBox spacing="8" styleClass="toolbar"><Button text="Добавить клиента" onAction="#add" styleClass="primary"/><Button text="Изменить" onAction="#edit"/><Button text="Удалить" onAction="#delete" styleClass="danger"/><Button text="Обновить" onAction="#refresh"/></HBox></bottom></BorderPane></Tab>
+        <Tab text="Аквариумы"><BorderPane><center><TableView fx:id="aquariumsTable" /></center><bottom><HBox spacing="8" styleClass="toolbar"><Button text="Добавить аквариум" onAction="#add" styleClass="primary"/><Button text="Изменить" onAction="#edit"/><Button text="Удалить" onAction="#delete" styleClass="danger"/><Button text="Обновить" onAction="#refresh"/></HBox></bottom></BorderPane></Tab>
+        <Tab text="Рыбы"><BorderPane><center><TableView fx:id="fishTable" /></center><bottom><HBox spacing="8" styleClass="toolbar"><Button text="Добавить рыб" onAction="#add" styleClass="primary"/><Button text="Изменить" onAction="#edit"/><Button text="Удалить" onAction="#delete" styleClass="danger"/><Button text="Обновить" onAction="#refresh"/></HBox></bottom></BorderPane></Tab>
       </tabs>
     </TabPane>
   </center>

@@ -4,6 +4,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mirea.aquarium.fx.RequestController" styleClass="root">
   <top><VBox spacing="12" styleClass="header">
     <Label text="Заявки на обслуживание аквариумов" styleClass="title" />
+    <Label text="Клиенты, обслуживание и расписание в одном месте" styleClass="subtitle" />
     <HBox spacing="8" alignment="CENTER_LEFT">
       <TextField fx:id="search" promptText="Поиск: клиент, описание, услуга, ID" HBox.hgrow="ALWAYS" />
       <ComboBox fx:id="statusFilter" promptText="Статус" />
@@ -16,11 +17,11 @@
   <bottom><HBox spacing="10" styleClass="toolbar">
     <Button text="Добавить" onAction="#add" styleClass="primary" />
     <Button text="Изменить выбранную" onAction="#editSelected" />
-    <Button text="Удалить выбранную" onAction="#deleteSelected" />
+    <Button text="Удалить выбранную" onAction="#deleteSelected" styleClass="danger" />
     <Button text="Обновить" onAction="#refresh" />
     <Pane HBox.hgrow="ALWAYS" />
     <Button text="Статистика" onAction="#showStatistics" />
     <Button text="Клиенты и аквариумы" onAction="#openManagement" />
-    <Button text="Экспорт CSV" onAction="#export" />
+    <Button text="Экспорт CSV" onAction="#export" styleClass="accent" />
   </HBox></bottom>
 </BorderPane>
