@@ -34,16 +34,16 @@ public class RequestController {
     @FXML private void initialize() {
         addColumn("ID", r -> Long.toString(r.getId()));
         addColumn("Клиент", ServiceRequest::getClientName);
-        addColumn("Аквариум", r -> r.getAquariumType().name());
-        addColumn("Услуга", r -> r.getServiceType().name());
+        addColumn("Аквариум", r -> r.getAquariumType().toString());
+        addColumn("Услуга", r -> r.getServiceType().toString());
         addColumn("Описание", ServiceRequest::getDescription);
-        addColumn("Статус", r -> r.getStatus().name());
+        addColumn("Статус", r -> r.getStatus().toString());
         addColumn("Приоритет", r -> Integer.toString(r.getPriority()));
         addColumn("Плановая дата", r -> r.getScheduledAt().toString().replace('T', ' '));
         addColumn("Цена", r -> r.getPrice().toPlainString());
-        statusFilter.setItems(FXCollections.observableArrayList("Все статусы", "NEW", "CONFIRMED", "IN_PROGRESS", "COMPLETED", "CANCELLED"));
+        statusFilter.setItems(FXCollections.observableArrayList("Все статусы", "Новая", "Подтверждена", "В работе", "Выполнена", "Отменена"));
         statusFilter.getSelectionModel().selectFirst();
-        typeFilter.setItems(FXCollections.observableArrayList("Все типы", "FRESHWATER", "MARINE", "REPTILE", "PLANT"));
+        typeFilter.setItems(FXCollections.observableArrayList("Все типы", "Пресноводный", "Морской", "Для рептилий", "Растительный"));
         typeFilter.getSelectionModel().selectFirst();
         loadClientFilter();
         priorityFilter.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 1));
@@ -70,8 +70,8 @@ public class RequestController {
         String status = statusFilter.getValue(), type = typeFilter.getValue(), client = clientFilter.getValue();
         table.setItems(FXCollections.observableArrayList(all.stream().filter(r ->
                 (q.isEmpty() || (r.getClientName()+" "+r.getDescription()+" "+r.getServiceType()+" "+r.getId()).toLowerCase(Locale.ROOT).contains(q)) &&
-                (status == null || status.equals("Все статусы") || r.getStatus().name().equals(status)) &&
-                (type == null || type.equals("Все типы") || r.getAquariumType().name().equals(type)) &&
+                (status == null || status.equals("Все статусы") || r.getStatus().toString().equals(status)) &&
+                (type == null || type.equals("Все типы") || r.getAquariumType().toString().equals(type)) &&
                 (client == null || client.equals("Все клиенты") || r.getClientName().equals(client)) &&
                 r.getPriority() >= priorityFilter.getValue()).toList()));
     }

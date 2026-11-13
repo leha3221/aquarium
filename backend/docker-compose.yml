@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: aquarium_backend
+      POSTGRES_USER: aquarium_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_local}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-55432}:5432"
+    volumes:
+      - aquarium-backend-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aquarium_app -d aquarium_backend"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aquarium_backend
+      POSTGRES_USER: aquarium_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_local}
+      APP_PORT: 8080
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+volumes:
+  aquarium-backend-data:
