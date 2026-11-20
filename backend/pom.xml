@@ -5,8 +5,8 @@
     <groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>3.5.5</version><relativePath/>
   </parent>
   <groupId>ru.mirea.aquarium</groupId><artifactId>aquarium-backend</artifactId><version>1.0.0</version>
-  <name>Aquarium Backend</name><description>REST API для системы обслуживания аквариумов</description>
-  <properties><java.version>21</java.version><jjwt.version>0.12.6</jjwt.version></properties>
+  <name>Aquarium Backend</name><description>REST API for aquarium service management</description>
+  <properties><java.version>21</java.version></properties>
   <dependencies>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-data-jpa</artifactId></dependency>

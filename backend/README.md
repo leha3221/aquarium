@@ -1,16 +1,21 @@
 # Aquarium Backend (КР №3)
 
-Отдельный Spring Boot REST-модуль для основной сущности «Аквариумы». JavaFX-приложение КР №2 остаётся отдельным клиентом.
+Spring Boot REST backend основной сущности «Аквариумы». JavaFX-приложение КР №2 находится отдельно и остаётся настольным клиентом.
 
 ## Запуск
 
-Нужны Docker Desktop и JDK 21/Maven 3.9 для локальной сборки. В корне проекта создайте `.env` (секреты не коммитить), затем из корня выполните:
+Нужны Docker Desktop и JDK 21. Создайте `.env` в корне проекта, затем выполните из корня:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\backend\start-compose.ps1
 ```
 
-Swagger: `http://localhost:8080/swagger-ui.html`, health: `http://localhost:8080/actuator/health`. База PostgreSQL публикуется на `localhost:55432`; данные сохраняются в Docker volume.
+- Swagger UI: http://localhost:8080/swagger-ui.html
+- OpenAPI JSON: http://localhost:8080/v3/api-docs
+- Health: http://localhost:8080/actuator/health
+- PostgreSQL: localhost:55432 (данные сохраняются в Docker volume)
+
+В backend нет web-фронтенда и авторизации: REST API и Swagger открыты без токена.
 
 ## API аквариумов
 
@@ -20,8 +25,8 @@ Swagger: `http://localhost:8080/swagger-ui.html`, health: `http://localhost:8080
 - `PUT /api/aquariums/{id}` — изменение с проверкой `version`.
 - `DELETE /api/aquariums/{id}` и `POST /api/aquariums/{id}/restore` — архив/восстановление.
 
-Типы аквариумов в JSON отображаются на русском (например, «Пресноводный»), а в БД остаются стабильные enum-коды.
+Типы аквариумов в JSON отображаются по-русски, при этом коды в БД остаются стабильными.
 
 ## Ответственность команды
 
-Исходники КР №3 разделены в `src/main/java/ru/mirea/aquarium/backend/team/`: `Maslov` — аквариумы, `Konstantinov` — клиенты, `Skvorcsov` — рыбы, `Seregin` — заявки. Для последующих частей созданы отдельные папки с README.
+Исходники КР №3 разделяются в `src/main/java/ru/mirea/aquarium/backend/team/`: `Maslov` — аквариумы, `Konstantinov` — клиенты, `Skvorcsov` — рыбы, `Seregin` — заявки.
