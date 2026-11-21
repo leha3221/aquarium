@@ -1,0 +1,3 @@
+package ru.mirea.aquarium.backend.team.Seregin.dto;
+import jakarta.validation.constraints.*;import ru.mirea.aquarium.backend.team.Seregin.domain.*;import java.math.BigDecimal;import java.time.LocalDateTime;import java.util.UUID;
+public record ServiceRequestDto(@NotBlank@Size(max=32)String code,@NotNull UUID clientId,@NotNull UUID aquariumId,@NotNull AquariumType aquariumType,@NotNull ServiceType serviceType,@NotBlank@Size(max=1000)String description,@NotNull RequestStatus status,@Min(1)@Max(5)int priority,LocalDateTime scheduledAt,@NotNull@DecimalMin("0.00")@Digits(integer=8,fraction=2)BigDecimal price,Long version){ }

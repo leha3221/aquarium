@@ -1,0 +1,8 @@
+package ru.mirea.aquarium.backend.team.Seregin.controller;
+import jakarta.validation.Valid;import org.springframework.data.domain.Page;import org.springframework.http.HttpStatus;import org.springframework.web.bind.annotation.*;import ru.mirea.aquarium.backend.team.Seregin.domain.*;import ru.mirea.aquarium.backend.team.Seregin.dto.ServiceRequestDto;import ru.mirea.aquarium.backend.team.Seregin.service.ServiceRequestService;import java.util.UUID;
+@RestController@RequestMapping("/api/requests")public class ServiceRequestController{
+ private final ServiceRequestService service;public ServiceRequestController(ServiceRequestService s){service=s;}
+ @GetMapping public Page<ServiceRequest>list(@RequestParam(required=false)String q,@RequestParam(required=false)UUID clientId,@RequestParam(required=false)RequestStatus status,@RequestParam(required=false)Boolean archived,@RequestParam(defaultValue="0")int page,@RequestParam(defaultValue="20")int size,@RequestParam(defaultValue="createdAt")String sort,@RequestParam(defaultValue="desc")String direction){return service.list(q,clientId,status,archived,page,size,sort,direction);}
+ @GetMapping("/{id}")public ServiceRequest get(@PathVariable UUID id){return service.get(id);}@PostMapping@ResponseStatus(HttpStatus.CREATED)public ServiceRequest create(@Valid@RequestBody ServiceRequestDto d){return service.create(d);}
+ @PutMapping("/{id}")public ServiceRequest update(@PathVariable UUID id,@Valid@RequestBody ServiceRequestDto d){return service.update(id,d);}@DeleteMapping("/{id}")@ResponseStatus(HttpStatus.NO_CONTENT)public void archive(@PathVariable UUID id){service.archive(id);}@PostMapping("/{id}/restore")public ServiceRequest restore(@PathVariable UUID id){return service.restore(id);}
+}
