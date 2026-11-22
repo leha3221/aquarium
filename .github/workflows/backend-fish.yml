@@ -1,0 +1,50 @@
+name: Backend fish checks
+
+on:
+  push:
+    branches: [main, "feature/fish-backend"]
+    paths: ["backend/**", ".github/workflows/backend-fish.yml"]
+  pull_request:
+    paths: ["backend/**", ".github/workflows/backend-fish.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: fish_module_test
+          POSTGRES_USER: fish_test
+          POSTGRES_PASSWORD: fish_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fish_test -d fish_module_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: H2 tests
+        working-directory: backend
+        run: sh mvnw -B -ntp verify
+      - name: PostgreSQL migrations and integration tests
+        working-directory: backend
+        run: >-
+          sh mvnw -B -ntp verify
+          -Dtest.database.url=jdbc:postgresql://localhost:5432/fish_module_test
+          -Dtest.database.username=fish_test
+          -Dtest.database.password=fish_test_password
+          -Dtest.flyway=true
+          -Dtest.ddl=validate
+          -Dtest.permanent.delete=true

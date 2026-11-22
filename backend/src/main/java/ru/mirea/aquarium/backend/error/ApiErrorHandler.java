@@ -12,6 +12,8 @@ import java.util.Map;
 public class ApiErrorHandler {
     @ExceptionHandler(EntityNotFoundException.class) ResponseEntity<?> missing(RuntimeException e) { return response(HttpStatus.NOT_FOUND, e.getMessage()); }
     @ExceptionHandler(OptimisticLockException.class) ResponseEntity<?> conflict(RuntimeException e) { return response(HttpStatus.CONFLICT, e.getMessage()); }
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    ResponseEntity<?> integrity(RuntimeException e) { return response(HttpStatus.CONFLICT, "Операция нарушает связи или ограничения данных"); }
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentNotValidException.class}) ResponseEntity<?> invalid(Exception e) {
         String message = e instanceof MethodArgumentNotValidException m ? m.getBindingResult().getFieldErrors().stream().map(x -> x.getField()+": "+x.getDefaultMessage()).findFirst().orElse("Проверьте поля запроса") : e.getMessage();
         return response(HttpStatus.BAD_REQUEST, message);

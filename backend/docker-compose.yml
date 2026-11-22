@@ -23,6 +23,7 @@ services:
       POSTGRES_USER: aquarium_app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_local}
       APP_PORT: 8080
+      PERMANENT_DELETE_ENABLED: ${PERMANENT_DELETE_ENABLED:-false}
     ports:
       - "127.0.0.1:${APP_PORT:-8080}:8080"
     depends_on:

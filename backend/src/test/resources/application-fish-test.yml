@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: ${test.database.url:jdbc:h2:mem:fish;MODE=PostgreSQL;DB_CLOSE_DELAY=-1}
+    username: ${test.database.username:sa}
+    password: ${test.database.password:}
+  jpa:
+    hibernate:
+      ddl-auto: ${test.ddl:create-drop}
+  flyway:
+    enabled: ${test.flyway:false}
+logging:
+  level:
+    root: WARN
+app:
+  fish:
+    permanent-delete-enabled: ${test.permanent.delete:false}
