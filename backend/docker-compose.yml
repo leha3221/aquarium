@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: aquarium_app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_local}
     ports:
-      - "127.0.0.1:${POSTGRES_PORT:-55432}:5432"
+      - "127.0.0.1:${BACKEND_POSTGRES_PORT:-55432}:5432"
     volumes:
       - aquarium-backend-data:/var/lib/postgresql/data
     healthcheck:
