@@ -15,7 +15,17 @@ powershell -ExecutionPolicy Bypass -File .\backend\start-compose.ps1
 - Health: http://localhost:8080/actuator/health
 - PostgreSQL: localhost:55432 (данные сохраняются в Docker volume)
 
-В backend нет web-фронтенда и авторизации: REST API и Swagger открыты без токена.
+В backend нет web-фронтенда и общей авторизации: API клиентов/аквариумов/заявок и Swagger открыты без токена.
+Модуль «Рыбы» проверяет principal и роли будущей общей авторизации; без неё возвращает 401.
+
+## API рыб
+
+Реализованы группы рыб, справочник видов, фильтры, серверная пагинация, версии, архив,
+заметки, массовые операции, двухэтапный CSV-импорт/экспорт и аналитическая сводка.
+Контракты запросов, права, миграции и запуск тестов:
+[документация модуля «Рыбы»](src/main/java/ru/mirea/aquarium/backend/team/Skvorcsov/README.md).
+
+Проверка с Java 21 без установленного Maven: `cd backend`, затем `.\mvnw.cmd verify`.
 
 ## API аквариумов
 

@@ -29,3 +29,6 @@ springdoc:
     disable-swagger-default-url: true
     operations-sorter: alpha
     tags-sorter: alpha
+app:
+  fish:
+    permanent-delete-enabled: ${PERMANENT_DELETE_ENABLED:false}

@@ -10,11 +10,16 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
     @Bean
     public OpenAPI aquariumApiDescription() {
-        return new OpenAPI().info(new Info()
+        return new OpenAPI().components(new io.swagger.v3.oas.models.Components()
+                .addSecuritySchemes("bearerAuth", new io.swagger.v3.oas.models.security.SecurityScheme()
+                        .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
+                        .scheme("bearer").bearerFormat("JWT")))
+                .info(new Info()
                 .title("Aquarium REST API")
                 .version("1.0.0")
-                .description("Открытый REST API системы учета и обслуживания аквариумов. " +
-                        "Авторизация не используется; запросы доступны без токена.")
+                .description("REST API системы учета и обслуживания аквариумов. " +
+                        "Модуль рыб требует principal и роли общей авторизации команды; " +
+                        "JWT-фильтр подключается отдельно.")
                 .contact(new Contact().name("Команда Aquarium")));
     }
 }
